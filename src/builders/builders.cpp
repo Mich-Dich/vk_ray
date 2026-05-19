@@ -51,7 +51,7 @@ namespace vr {
             instance.destroy();
             return;
         }
-        VR_LOG(warning, "Called Instance::DestroyInstance with invalid vk::Instance");
+        LOG(warn, "Called Instance::DestroyInstance with invalid vk::Instance");
     }
 
 
@@ -108,7 +108,7 @@ namespace vr {
         if (!instance_result.has_value())
         {
 
-            VR_LOG(error, "Instance Build failed, Error: %s", instance_result.error().message());
+            LOG(error, "Instance Build failed, Error: %s", instance_result.error().message());
             throw std::runtime_error("No Instance Created");
             return {};
         }
@@ -171,7 +171,7 @@ namespace vr {
         auto phys_result = phys_selector.select();
         if (!phys_result.has_value())
         {
-            VR_LOG(error, "Physical Device Build failed, Error: %s", phys_result.error().message());
+            LOG(error, "Physical Device Build failed, Error: %s", phys_result.error().message());
             throw std::runtime_error("Physical Device Build failed");
             return {};
         }
@@ -192,7 +192,7 @@ namespace vr {
         if (!devResult.has_value())
         {
 
-            VR_LOG(error, "Logical Device Build failed, Error: %s", devResult.error().message());
+            LOG(error, "Logical Device Build failed, Error: %s", devResult.error().message());
             throw std::runtime_error("No Logical Devices Created");
             return {};
         }
@@ -258,19 +258,19 @@ namespace vr {
 
         if (!queues.graphics_queue) {
 
-            VR_LOG(error, "No Graphics Queue Found");
+            LOG(error, "No Graphics Queue Found");
             throw std::runtime_error("No Graphics Queue Found");
         }
 
         if (dedicated_compute && !ded_compute) {
 
-            VR_LOG(error, "No Compute Queue Found");
+            LOG(error, "No Compute Queue Found");
             throw std::runtime_error("No Compute Queue Found");
         }
 
         if (dedicated_transfer && !ded_transfer) {
 
-            VR_LOG(error, "No Transfer Queue Found");
+            LOG(error, "No Transfer Queue Found");
             throw std::runtime_error("No Transfer Queue Found");
         }
 
@@ -322,10 +322,10 @@ namespace vr {
         }
 
         if (compatible_format.format != desired_format)
-            VR_LOG(error, "Desired Format is not available, Fallback is vk::Format::eB8G8R8A8Srgb");
+            LOG(error, "Desired Format is not available, Fallback is vk::Format::eB8G8R8A8Srgb");
 
         if (compatible_format.colorSpace != color_space)
-            VR_LOG(error, "Desired ColorSpace is not available, Using: %s", vk::to_string(compatible_format.colorSpace));
+            LOG(error, "Desired ColorSpace is not available, Using: %s", vk::to_string(compatible_format.colorSpace));
 
         vkb::SwapchainBuilder *swap_builder = nullptr;
         swap_builder = new vkb::SwapchainBuilder(physical_device, device, surface, graphics_queue_index, present_queue_index);
@@ -348,7 +348,7 @@ namespace vr {
         auto build_result = swap_builder->build();
         if (!build_result.has_value()) {
 
-            VR_LOG(error, "Swapchain Build failed, Error: %s", build_result.error().message());
+            LOG(error, "Swapchain Build failed, Error: %s", build_result.error().message());
             throw std::runtime_error("Swapchain Build failed");
             return {};
         }
@@ -358,10 +358,10 @@ namespace vr {
         auto swap_images = swapchain.get_images();
 
         if (!swap_images.has_value())
-            VR_LOG(error, "Swapchain Images Error: %s", swap_images.error().message());
+            LOG(error, "Swapchain Images Error: %s", swap_images.error().message());
 
         if (!swap_image_views.has_value())
-            VR_LOG(error, "Swapchain Image Views Error: %s", swap_image_views.error().message());
+            LOG(error, "Swapchain Image Views Error: %s", swap_image_views.error().message());
 
         auto images = *reinterpret_cast<std::vector<vk::Image> *>(&swap_images.value());
         auto imageviews = *reinterpret_cast<std::vector<vk::ImageView> *>(&swap_image_views.value());
@@ -397,10 +397,10 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL vk_ray_vulkan_debug_cback(VkDebugUtilsMess
     const char* msg_severity = vkb::to_string_message_severity(message_severity);
     const char* msg_type = vkb::to_string_message_type(message_type);
     switch (message_severity) {
-        case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:       VR_LOG(verbose, "[Vulkan][%s][%s]: %s", msg_type, msg_severity, p_callback_data->pMessage); break;
-        case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:          VR_LOG(info, "[Vulkan][%s][%s]: %s", msg_type, msg_severity, p_callback_data->pMessage); break;
-        case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:       VR_LOG(warning, "[Vulkan][%s][%s]: %s", msg_type, msg_severity, p_callback_data->pMessage); break;
-        case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:         VR_LOG(error, "[Vulkan][%s][%s]: %s", msg_type, msg_severity, p_callback_data->pMessage); break;
+        case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:       LOG(trace, "[Vulkan][%s][%s]: %s", msg_type, msg_severity, p_callback_data->pMessage); break;
+        case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:          LOG(info, "[Vulkan][%s][%s]: %s", msg_type, msg_severity, p_callback_data->pMessage); break;
+        case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:       LOG(warn, "[Vulkan][%s][%s]: %s", msg_type, msg_severity, p_callback_data->pMessage); break;
+        case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:         LOG(error, "[Vulkan][%s][%s]: %s", msg_type, msg_severity, p_callback_data->pMessage); break;
         default: break;
     }
 

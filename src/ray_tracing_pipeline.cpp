@@ -81,7 +81,7 @@ namespace vr {
             // check if both shaders are null
             if (!group.closest_hit_shader.module && !group.any_hit_shader.module && !group.intersection_shader.module) {
 
-                VR_LOG(error, "CreateRayTracingPipeline: Hit group must have at least one shader");
+                LOG(error, "CreateRayTracingPipeline: Hit group must have at least one shader");
             }
 
             // add closest hit shader if it exists
@@ -182,7 +182,7 @@ namespace vr {
         // when deferred_operation is not null, the pipeline is created asynchronously, so it doesn't return success or failure
         if (res.result != vk::Result::eSuccess && res.result != vk::Result::eOperationDeferredKHR) {
 
-            VR_LOG(error, "CreateRayTracingPipeline: Failed to create ray tracing pipeline");
+            LOG(error, "CreateRayTracingPipeline: Failed to create ray tracing pipeline");
             res.value = nullptr;
         }
 
@@ -232,7 +232,7 @@ namespace vr {
         // when deferred_operation is not null, the pipeline is created asynchronously, so it doesn't return success or failure
         if (res.result != vk::Result::eSuccess && res.result != vk::Result::eOperationDeferredKHR) {
 
-            VR_LOG(error, "CreateRayTracingPipeline: Failed to create ray tracing pipeline");
+            LOG(error, "CreateRayTracingPipeline: Failed to create ray tracing pipeline");
             res.value = nullptr;
         }
 
@@ -275,7 +275,7 @@ namespace vr {
         // when deferred_operation is not null, the pipeline is created asynchronously, so it doesn't return success or failure
         if (res.result != vk::Result::eSuccess && res.result != vk::Result::eOperationDeferredKHR)
         {
-            VR_LOG(error, "CreateRayTracingPipeline: Failed to create ray tracing pipeline");
+            LOG(error, "CreateRayTracingPipeline: Failed to create ray tracing pipeline");
             res.value = nullptr;
         }
 

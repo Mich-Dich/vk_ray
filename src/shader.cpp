@@ -25,7 +25,7 @@ namespace vr {
         shader outShader = {};
         if (spv.empty()) {
 
-            VR_LOG(error, "ShaderCreateInfo must have SPIRV code");
+            LOG(error, "ShaderCreateInfo must have SPIRV code");
             return outShader; // return empty shader, because no shader was created
         }
 

@@ -40,7 +40,7 @@ namespace vr {
 
         auto result = (vk::Result)vmaCreateImage(m_vma_allocator, (VkImageCreateInfo*)&image_info, &alloc_inf, (VkImage*)&out_image.image, &out_image.allocation, &allocationInfo);
         if (result != vk::Result::eSuccess)
-            VR_LOG(error, "Failed to create Image: %s", vk::to_string(result));
+            LOG(error, "Failed to create Image: %s", vk::to_string(result));
 
         out_image.size = allocationInfo.size;
         out_image.width = image_info.extent.width;
@@ -70,7 +70,7 @@ namespace vr {
 
         if (result != vk::Result::eSuccess)
         {
-            VR_LOG(error, "Failed to create buffer: %s", vk::to_string(result));
+            LOG(error, "Failed to create buffer: %s", vk::to_string(result));
             return out_buffer;
         }
 
