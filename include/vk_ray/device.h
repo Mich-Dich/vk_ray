@@ -39,33 +39,39 @@ namespace vr {
 
         // Getter Functions ===========================================================================================
 
+
         // @brief Get the Vulkan device handle
         vk::Device get_device() const                                                                           { return m_device; }
+
 
         // @brief Get the Vulkan physical device handle
         vk::PhysicalDevice get_physical_device() const                                                          { return m_physical_device; }
 
+
         // @brief Get the Vulkan instance handle
         vk::Instance get_instance() const                                                                       { return m_instance; }
+
 
         // @brief Get the Vulkan dynamic loader
         vk::detail::DispatchLoaderDynamic get_dynamic_loader() const                                            { return m_dyn_loader; }
 
+
         // @brief Get the Physical device properties
         vk::PhysicalDeviceProperties get_properties() const                                                     { return m_device_properties; }
+
 
         // @brief Get the Ray Tracing properties of the physical device
         vk::PhysicalDeviceRayTracingPipelinePropertiesKHR get_ray_tracing_properties() const                    { return m_ray_tracing_properties; }
 
+
         // @brief Get the Acceleration Structure properties of the physical device
         vk::PhysicalDeviceAccelerationStructurePropertiesKHR get_acceleration_structure_properties() const      { return m_accel_properties; }
+
 
         // @brief Get the Descriptor Buffer properties of the physical device
         vk::PhysicalDeviceDescriptorBufferPropertiesEXT get_descriptor_buffer_properties() const                { return m_descriptor_buffer_properties; }
 
-        // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-        // @@@@@@@@@@@@@@@@@@@@@@@ Command Buffer Functions @@@@@@@@@@@@@@@@@@@@@@@@@@@
-        // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        // Command Buffer Functions ===============================================================
 
         // @brief Transitions the image layout
         // @param image The image that will be transitioned
@@ -75,19 +81,19 @@ namespace vr {
         // @param command_buffer The command buffer that will be used to record the transition
         // @param srcStage The source pipeline stage, default is all commands
         // @param dstStage The destination pipeline stage, default is all commands
-        void transition_image_layout(vk::CommandBuffer command_buffer, vk::Image image, vk::ImageLayout oldLayout, vk::ImageLayout newLayout,
+        void transition_image_layout(vk::CommandBuffer command_buffer, vk::Image image, vk::ImageLayout oldLayout, 
+            vk::ImageLayout newLayout,
             const vk::ImageSubresourceRange& range = vk::ImageSubresourceRange(vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1),
             vk::PipelineStageFlags srcStage = vk::PipelineStageFlagBits::eAllGraphics,
             vk::PipelineStageFlags dstStage = vk::PipelineStageFlagBits::eAllCommands);
 
-        // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-        // @@@@@@@@@@@@@@@ Acceleration Structure Functions @@@@@@@@@@@@@@@@@@@@@@@@@@@
-        // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        // Acceleration Structure Functions =======================================================
 
         // @brief Creates a bottom level acceleration structure and gives BuildInfo for the build
         // @param info The information that will be used to create the acceleration structure
         // @return A pair of the acceleration structure handle and the build info
         [[nodiscard]] std::pair<blas_handle, blas_build_info> create_blas(const blas_create_info& info);
+
 
         // @brief Builds the acceleration structure and records the build to the command buffer
         // @param build_infos Vector of build infos that will be used to build the acceleration structure, this should
@@ -95,17 +101,20 @@ namespace vr {
         // @param command_buffer The command buffer that will be used to record the build
         void build_blas(const std::vector<blas_build_info>& build_infos, vk::CommandBuffer command_buffer);
 
+
         // @brief Updates the acceleration structure and returns the scratch buffer for building
         // @param updateInfo The information that will be used to update the acceleration structure
         // @return The build info that will be used to build the acceleration structure
         // @note The BLAS needs to be built again with the returned build info
         [[nodiscard]] blas_build_info update_blas(blas_update_info& updateInfo);
 
+        
         // @brief Creates a top level acceleration structure
         // @param info The information that will be used to create the acceleration structure
         // @return A pair of the acceleration structure handle and the build info
         [[nodiscard]] std::pair<tlas_handle, tlas_build_info> create_tlas(const tlas_create_info& info);
 
+        
         // @brief Builds the acceleration structure and records the build to the command buffer
         // @param build_info The build info that will be used to build the acceleration structure, this should be the
         // return value of CreateTLAS(...)
@@ -113,8 +122,10 @@ namespace vr {
         // structure
         // @param instanceCount The number of instances in the InstanceBuffer
         // @param command_buffer The command buffer that will be used to record the build
-        void build_tlas(tlas_build_info& build_info, const allocated_buffer& InstanceBuffer, uint32_t instanceCount, vk::CommandBuffer command_buffer);
+        void build_tlas(tlas_build_info& build_info, const allocated_buffer& InstanceBuffer, uint32_t instanceCount, 
+            vk::CommandBuffer command_buffer);
 
+        
         // @brief Updates the acceleration structure
         // @param oldTLAS The old acceleration structure that will be updated
         // @param oldBuildInfo The old build info that will be used to update the acceleration structure
@@ -126,13 +137,16 @@ namespace vr {
         // degrades the quality of the acceleration structure over time. Top level acceleration structure's build time
         // is negligible in a real time application, so it is recommended to create a new acceleration structure
         // instead of updating the old one, according to NVIDIA's best practices.
-        [[nodiscard]] std::pair<tlas_handle, tlas_build_info> update_tlas(tlas_handle& oldTLAS, tlas_build_info& oldBuildInfo, bool destroyOld = true);
+        [[nodiscard]] std::pair<tlas_handle, tlas_build_info> update_tlas(tlas_handle& oldTLAS, tlas_build_info& oldBuildInfo, 
+            bool destroyOld = true);
 
+        
         // @brief Creates a compaction request for the given BLASes
         // @param sourceBLAS The pointer to the BLASes that will be compacted supplied in a vector
         // @return The compaction request handle to call GetCompactionSizes(...) and CompactBLAS(...)
         [[nodiscard]] compaction_request request_compaction(const std::vector<blas_handle* >& sourceBLAS);
 
+        
         // @brief Returns the sizes required for compaction
         // @param request The compaction request that will be used to get the sizes
         // @param command_buffer The command buffer that will be used to record the query
@@ -145,6 +159,7 @@ namespace vr {
         // succesfully returns the values,
         [[nodiscard]] std::vector<uint64_t> get_compaction_sizes(compaction_request& request, vk::CommandBuffer command_buffer);
 
+        
         // @brief Compacts the BLASes and returns the compacted BLASes
         // @param request The compaction request that will be used to compact the BLASes, this should be the return
         // value of RequestCompaction(...)
@@ -154,8 +169,10 @@ namespace vr {
         // @return The compacted BLASes
         // @note After this function succesfully returns the compacted BLASes, the user should destroy the source
         // BLASes AFTER the command buffer execution
-        [[nodiscard]] std::vector<blas_handle> compact_blas(compaction_request& request, const std::vector<uint64_t>& sizes, vk::CommandBuffer command_buffer);
+        [[nodiscard]] std::vector<blas_handle> compact_blas(compaction_request& request, const std::vector<uint64_t>& sizes, 
+            vk::CommandBuffer command_buffer);
 
+        
         // @brief Compacts the BLASes and returns the old BLASes to be destroyed
         // @param request The compaction request that will be used to compact the BLASes, this should be the return
         // value of RequestCompaction(...)
@@ -169,6 +186,7 @@ namespace vr {
         [[nodiscard]] std::vector<blas_handle> compact_blas(compaction_request& request, const std::vector<uint64_t>& sizes,
             std::vector<blas_handle* > oldBLAS, vk::CommandBuffer command_buffer);
 
+        
         // @brief Creates a SINGLE scratch buffer for building acceleration structures and binds the scratch buffer to
         // the build infos
         // @param build_infos The build infos that will be used to create the scratch buffer
@@ -178,22 +196,26 @@ namespace vr {
         // BLAS and use the scratch buffer for the updating.
         [[nodiscard]] allocated_buffer create_scratch_buffer_from_build_infos(std::vector<blas_build_info>& build_infos);
 
+        
         // @brief Binds the scratch buffer to the build info
         // @param scratchBuffer The scratch buffer that will be bound
         // @param build_info The build info that will be bound to the scratch buffer
         [[nodiscard]] allocated_buffer create_scratch_buffer_from_build_info(blas_build_info& build_info);
 
+        
         // @brief Creates a SINGLE scratch buffer for building acceleration structure, and binds the scratch buffer to
         // the build info
         // @param build_info The build info that will be used to create the scratch buffer
         // @return The scratch buffer
         [[nodiscard]] allocated_buffer create_scratch_buffer_from_build_infos(std::vector<tlas_build_info>& build_info);
 
+        
         // @brief Binds the scratch buffer to the build info
         // @param scratchBuffer The scratch buffer that will be bound
         // @param build_info The build info that will be bound to the scratch buffer
         [[nodiscard]] allocated_buffer create_scratch_buffer_from_build_info(tlas_build_info& build_info);
 
+        
         // @brief Binds the scratch buffer to the build infos. Assumes that the whole scratch buffer is used for all
         // the build infos. This function is useful, when you already have a scratch buffer and you want to use it for
         // a build. Ideally one should create a big scratch buffer and use it for all the builds, so this allows that.
@@ -204,6 +226,7 @@ namespace vr {
         // GetScratchBufferSize(...) to get required size of the scratch buffer.
         void bind_scratch_buffer_to_build_infos(const vr::allocated_buffer& buffer, std::vector<blas_build_info>& build_infos);
 
+        
         // @brief Binds the scratch buffer to the build infos. Assumes that the whole scratch buffer is used for all
         // the build infos. This function is useful, when you already have a scratch buffer and you want to use it for
         // a build. Ideally one should create a big scratch buffer and use it for all the builds, so this allows that.
@@ -213,6 +236,7 @@ namespace vr {
         // structure, it is the user's responsibility to check the sizes. and ensure it doesn't overflow, Use
         // GetScratchBufferSize(...) to get required size of the scratch buffer.
         void bind_scratch_buffer_to_build_infos(const vr::allocated_buffer& buffer, std::vector<tlas_build_info>& build_infos);
+
 
         // @brief Binds the scratch buffer to the build info.
         // @param scratch_addr The scratch address that will be bound
@@ -225,49 +249,57 @@ namespace vr {
         // @param build_info The build info that will be bound to the scratch address
         void bind_scratch_adress_to_build_info(vk::DeviceAddress scratch_addr, tlas_build_info& build_info);
 
+
         // @brief Returns the size of the scratch buffer required to build all the acceleration structures.
         // @param infos The build infos that will be used to get the size of the scratch buffer
         // @return The size of the scratch buffer required to build all the acceleration structures
         [[nodiscard]] uint32_t get_scratch_buffer_size(const std::vector<blas_build_info>& build_infos);
+
 
         // @brief Returns the size of the scratch buffer required to build all the acceleration structures.
         // @param infos The build infos that will be used to get the size of the scratch buffer
         // @return The size of the scratch buffer required to build all the acceleration structures
         [[nodiscard]] uint32_t get_scratch_buffer_size(const std::vector<tlas_build_info>& build_infos);
 
+
         // @brief Adds barrier to the command buffer to ensure the acceleration structure is built before other
         // acceleration structures are built
         // @param command_buffer The command buffer that will be used to record the barrier
         void add_acceleration_build_barrier(vk::CommandBuffer command_buffer);
+        
 
         // @brief Destroys the acceleration structure
         // @param accel The acceleration structures that will be destroyed
         void destroy_blas(std::vector<blas_handle>& blas);
 
+
         // @brief Destroys the acceleration structure
         // @param blas The acceleration structure that will be destroyed
         void destroy_blas(blas_handle& blas);
+
 
         // @brief Destroys the acceleration structure
         // @param accel The acceleration structures that will be destroyed
         void destroy_tlas(tlas_handle& tlas);
 
+
         // @brief Destroys raw Vulkan acceleration structure
         void destroy_acceleration_structure(const vk::AccelerationStructureKHR& accel);
 
-        // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-        // @@@@@@@@@@@@@@@@@@@@@@ Allocation Functions @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-        // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        // Allocation Functions ===================================================================
 
         // @brief Returns the VMA allocator that is used to allocate the resources
         VmaAllocator get_allocator() const                                                   { return m_vma_allocator; }
+
 
         // @brief Creates an Image
         // @param imgInfo The information that will be used to create the image
         // @param flags The VMA flags that will be used to allocate the image
         // @return The created image
         // @note Image views are not created in this function and must be created manually
-        [[nodiscard]] allocated_image create_image(const vk::ImageCreateInfo& imgInfo, VmaAllocationCreateFlags flags, VmaPool pool = nullptr);
+        [[nodiscard]] allocated_image create_image(const vk::ImageCreateInfo& imgInfo, VmaAllocationCreateFlags flags, 
+            VmaPool pool = nullptr);
+
 
         // @brief Creates a buffer
         // @param size The size of the buffer
@@ -281,8 +313,9 @@ namespace vr {
         // 2. By default VmaAllocationCreateInfo::usage is VMA_MEMORY_USAGE_AUTO_PREFER_DEVICE, so the memory will be
         // allocated preferentially on the device. This can be overriden by specifying a VmaPool from where the memory
         // will be allocated.
-        [[nodiscard]] allocated_buffer create_buffer(vk::DeviceSize size, vk::BufferUsageFlags bufferUsage, VmaAllocationCreateFlags flags = 0,
-            uint32_t alignment = 0,VmaPool pool = nullptr);
+        [[nodiscard]] allocated_buffer create_buffer(vk::DeviceSize size, vk::BufferUsageFlags bufferUsage, 
+            VmaAllocationCreateFlags flags = 0, uint32_t alignment = 0,VmaPool pool = nullptr);
+
 
         // @brief Creates a buffer for storing the instances
         // @param instanceCount The number of instances that will be stored in the buffer (not byte size)
@@ -292,10 +325,12 @@ namespace vr {
         // copy the instance data to the device local buffer.
         [[nodiscard]] allocated_buffer create_instance_buffer(uint32_t instanceCount);
 
+
         // @brief Creates a buffer for storing the scratch data and uses correct alignment / flags
         // @param size The size of the buffer
         // @return The created buffer
         [[nodiscard]] allocated_buffer create_scratch_buffer(uint32_t size);
+
 
         // @brief Creates a buffer for storing the descriptor sets
         // @param layout The descriptor set layout that will be used to create the buffer
@@ -305,6 +340,7 @@ namespace vr {
         // @return The created descriptor buffer
         [[nodiscard]] descriptor_buffer create_descriptor_buffer(vk::DescriptorSetLayout layout, std::vector<descriptor_item>& items,
             descriptor_buffer_type type, uint32_t setCount = 1);
+
 
         // @brief Copies data from src to dst via vkCmdCopyBuffer
         // @param src The source buffer
@@ -316,6 +352,7 @@ namespace vr {
         // @warning This function does not check if the buffers are big enough to copy the data, it is the user's
         // responsibility to check the sizes.
         void copy_data(allocated_buffer src, allocated_buffer dst, vk::DeviceSize size, vk::CommandBuffer command_buffer);
+
 
         // @brief Uploads data to a buffer, via mapping the buffer and memcpy
         // @param alloc The buffer that will be updated, MUST be host visible when created
@@ -329,6 +366,7 @@ namespace vr {
         // VMA assertion if the buffer is not mappable.
         void update_buffer(allocated_buffer alloc, void* data, const vk::DeviceSize size, uint32_t offset = 0);
 
+
         // @brief Maps the buffer and returns the mapped data
         // @param buffer The buffer that will be mapped
         // @return The mapped data
@@ -336,41 +374,46 @@ namespace vr {
         // or similar flags
         [[nodiscard]] void* map_buffer(allocated_buffer& buffer);
 
+
         // @brief Unmaps the buffer
         // @param buffer The buffer that will be unmapped
         void unmap_buffer(allocated_buffer& buffer);
+
 
         // @brief Destroys the buffer
         // @param buffer The buffer that will be destroyed
         void destroy_buffer(allocated_buffer& buffer);
 
+
         // @brief Destroys the image
         // @param img The image that will be destroyed
         void destroy_image(allocated_image& img);
 
-        // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-        // @@@@@@@@@@@@@@@@@@@@@@@@ Pipeline Functions @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-        // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        // Pipeline Functions =====================================================================
 
         // @brief Creates a shader object from SPIRV code
         // @param info The information that will be used to create the shader module
         // @return The created shader module
         [[nodiscard]] shader create_shader_from_spv(const std::vector<uint32_t>& spv);
 
+
         // @brief Creates a shader module from SPIRV code
         // @param spvCode The SPIRV code that will be used to create the shader module
         // @return The created shader module
         [[nodiscard]] vk::ShaderModule create_shader_module(const std::vector<uint32_t>& spvCode);
+
 
         // @brief Creates a pipeline layout
         // @param descLayout The descriptor set layout that will be used to create the pipeline layout
         // @return The created pipeline layout
         [[nodiscard]] vk::PipelineLayout create_pipeline_layout(vk::DescriptorSetLayout descLayout);
 
+
         // @brief Creates a pipeline layout
         // @param descLayouts The descriptor set layouts that will be used to create the pipeline layout
         // @return The created pipeline layout
         [[nodiscard]] vk::PipelineLayout create_pipeline_layout(const std::vector<vk::DescriptorSetLayout>& descLayouts);
+
 
         // @brief Returns the shader stages and shader groups that are constructed from the ShaderBindingTable.
         // Useful if wanting to create a pipeline library and link the pipeline library to the pipeline.
@@ -379,6 +422,7 @@ namespace vr {
         // @return The shader stages and shader groups that are constructed from the ShaderBindingTable
         [[nodiscard]] std::pair<std::vector<vk::PipelineShaderStageCreateInfo>, std::vector<vk::RayTracingShaderGroupCreateInfoKHR>> get_shader_stages_and_ray_tracing_groups(
             const ray_tracing_shader_collection& info);
+
 
         // @brief Creates a ray tracing pipeline
         // @param shaderCollection The shader collection that will be used to create the pipeline.
@@ -389,8 +433,10 @@ namespace vr {
         // @param deferredOp The deferred operation that will be used to create the pipeline, default is nullptr
         // @return The created ray tracing pipeline and the shader binding table info to create the shader binding
         // table
-        [[nodiscard]] std::pair<vk::Pipeline, sbt_info> create_ray_tracing_pipeline(const ray_tracing_shader_collection& shaderCollection, pipeline_settings& settings,
-            vk::PipelineCreateFlags flags = vk::PipelineCreateFlagBits::eDescriptorBufferEXT,vk::DeferredOperationKHR deferredOp = nullptr);
+        [[nodiscard]] std::pair<vk::Pipeline, sbt_info> create_ray_tracing_pipeline(const ray_tracing_shader_collection& shaderCollection, 
+            pipeline_settings& settings, vk::PipelineCreateFlags flags = vk::PipelineCreateFlagBits::eDescriptorBufferEXT,
+            vk::DeferredOperationKHR deferredOp = nullptr);
+
 
         // @brief Creates a ray tracing pipeline
         // @param shaderCollections The shader collections that will be used to create the pipeline.
@@ -402,8 +448,11 @@ namespace vr {
         // @param deferredOp The deferred operation that will be used to create the pipeline, default is nullptr
         // @return The created ray tracing pipeline and the shader binding table info to create the shader binding
         // table
-        [[nodiscard]] std::pair<vk::Pipeline, sbt_info> create_ray_tracing_pipeline(const std::vector<ray_tracing_shader_collection>& shaderCollections, pipeline_settings& settings,
-            vk::PipelineCreateFlags flags = vk::PipelineCreateFlagBits::eDescriptorBufferEXT, vk::PipelineCache cache = nullptr, vk::DeferredOperationKHR deferredOp = nullptr);
+        [[nodiscard]] std::pair<vk::Pipeline, sbt_info> create_ray_tracing_pipeline(
+            const std::vector<ray_tracing_shader_collection>& shaderCollections, pipeline_settings& settings, 
+            vk::PipelineCreateFlags flags = vk::PipelineCreateFlagBits::eDescriptorBufferEXT, vk::PipelineCache cache = nullptr, 
+            vk::DeferredOperationKHR deferredOp = nullptr);
+
 
         // @brief Convenience function that calls CreateRayTracingPipeline(...) and then copies the shader record sizes
         // to the shader binding table info from the old shader binding table info to the new shader binding table
@@ -418,9 +467,11 @@ namespace vr {
         // @param deferredOp The deferred operation that will be used to create the pipeline, default is nullptr
         // @return The created ray tracing pipeline and the shader binding table info to create the shader binding
         // table
-        [[nodiscard]] std::pair<vk::Pipeline, sbt_info> create_ray_tracing_pipeline(const std::vector<ray_tracing_shader_collection>& shaderCollections, pipeline_settings& settings,
-            sbt_info& sbtInfoOld, vk::PipelineCreateFlags flags = vk::PipelineCreateFlagBits::eDescriptorBufferEXT,
-            vk::PipelineCache cache = nullptr, vk::DeferredOperationKHR deferredOp = nullptr);
+        [[nodiscard]] std::pair<vk::Pipeline, sbt_info> create_ray_tracing_pipeline(
+            const std::vector<ray_tracing_shader_collection>& shaderCollections, pipeline_settings& settings, sbt_info& sbtInfoOld, 
+            vk::PipelineCreateFlags flags = vk::PipelineCreateFlagBits::eDescriptorBufferEXT, vk::PipelineCache cache = nullptr, 
+            vk::DeferredOperationKHR deferredOp = nullptr);
+
 
         // @todo If an issue to anyone, then add support for creation of pipelines even when shaders are destroyed.
         // in theory this is already possible, because we don't use the modules for anything other than pipeline
@@ -429,6 +480,7 @@ namespace vr {
         // memory, then this we can add support for this by adding a new struct that contains the number of shaders
         // that were in the pipeline library and the pipeline library handle. Should be simple to implement, but I
         // don't see a reason to do it unless someone requests it.
+
 
         // @brief Creates a ray tracing pipeline library
         // @param shaderCollection The shader collection that will be used to create the pipeline library
@@ -441,18 +493,18 @@ namespace vr {
         void create_pipeline_library(ray_tracing_shader_collection& shaderCollection, pipeline_settings& settings,
             vk::PipelineCreateFlags flags = vk::PipelineCreateFlagBits::eDescriptorBufferEXT, vk::PipelineCache cache = nullptr, vk::DeferredOperationKHR deferredOp = nullptr);
 
+
         // @brief Destroys the shader module
         // @param shader The shader module that will be destroyed
         void destroy_shader(shader& shader);
 
-        // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-        // @@@@@@@@@@@@@@@@@@@@@@@@@ Descriptor Functions @@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-        // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        // Descriptor Functions ===================================================================
 
         // @brief Creates a descriptor set layout
         // @param bindings The descriptor items that will be used to create the descriptor set layout
         // @return The created descriptor set layout
         [[nodiscard]] vk::DescriptorSetLayout create_descriptor_set_layout(const std::vector<descriptor_item>& bindings);
+
 
         // @brief Updates the descriptor buffer with the descriptor items in the set
         // @param buffer The descriptor buffer that will be updated
@@ -465,8 +517,9 @@ namespace vr {
         // descriptor_item::pImageViews/pResources pointer
         // @warning There can be a segmentation fault if the pointers in the descriptor_item are not valid or the
         // pointers are not pointing to an array of descriptor_item::ArraySize/DynamicArraySize elements
-        void update_descriptor_buffer(descriptor_buffer& buffer, const std::vector<descriptor_item>& items, descriptor_buffer_type type, uint32_t setIndexInBuffer = 0,
-            void* pMappedData = nullptr);
+        void update_descriptor_buffer(descriptor_buffer& buffer, const std::vector<descriptor_item>& items, 
+            descriptor_buffer_type type, uint32_t setIndexInBuffer = 0, void* pMappedData = nullptr);
+
 
         // @brief Updates the descriptor buffer with the single descriptor item including all the elements in the array
         // @param buffer The descriptor buffer that will be updated
@@ -479,8 +532,10 @@ namespace vr {
         // descriptor_item::pImageViews/pResources pointer
         // @warning There can be a segmentation fault if the pointers in the descriptor_item are not valid or the
         // pointers
-        void update_descriptor_buffer(descriptor_buffer& buffer, const descriptor_item& item, descriptor_buffer_type type, uint32_t setIndexInBuffer = 0, void* pMappedData = nullptr);
+        void update_descriptor_buffer(descriptor_buffer& buffer, const descriptor_item& item, descriptor_buffer_type type, 
+            uint32_t setIndexInBuffer = 0, void* pMappedData = nullptr);
 
+        
         // @brief Updates the descriptor buffer with one element of the descriptor item
         // @param buffer The descriptor buffer that will be updated
         // @param item The descriptor item that will be used to update the descriptor buffer
@@ -491,14 +546,16 @@ namespace vr {
         // and unmapped, default is nullptr
         // @warning There can be a segmentation fault if the pointers in the descriptor_item are not valid or the item
         // index is out of bounds
-        void update_descriptor_buffer(descriptor_buffer& buffer, const descriptor_item& item, uint32_t itemIndex, descriptor_buffer_type type, uint32_t setIndexInBuffer = 0,
-            void* pMappedData = nullptr);
+        void update_descriptor_buffer(descriptor_buffer& buffer, const descriptor_item& item, uint32_t itemIndex, 
+            descriptor_buffer_type type, uint32_t setIndexInBuffer = 0, void* pMappedData = nullptr);
 
+        
         // @brief Binds the descriptor buffer to the command buffer
         // @param buffers The descriptor buffers that will be bound
         // @param command_buffer The command buffer that will be used to record the bind
         void bind_descriptor_buffer(const std::vector<descriptor_buffer>& buffers, vk::CommandBuffer command_buffer);
 
+        
         // @brief Binds the descriptor set to the command buffer
         // @param layout The pipeline layout that will be used to bind the descriptor set
         // @param set The set where the descriptor set will be bound
@@ -510,8 +567,9 @@ namespace vr {
         // the start of the descriptor set that will be bound
         // @param command_buffer The command buffer that will be used to record the bind
         // @param bindPoint The bind point of the descriptor set, default is eRayTracingKHR
-        void bind_descriptor_set(vk::PipelineLayout layout, uint32_t set, uint32_t bufferIndex, vk::DeviceSize offset, vk::CommandBuffer command_buffer,
-            vk::PipelineBindPoint bindPoint = vk::PipelineBindPoint::eRayTracingKHR);
+        void bind_descriptor_set(vk::PipelineLayout layout, uint32_t set, uint32_t bufferIndex, vk::DeviceSize offset, 
+            vk::CommandBuffer command_buffer, vk::PipelineBindPoint bindPoint = vk::PipelineBindPoint::eRayTracingKHR);
+
 
         // @brief Binds the descriptor sets to the command buffer
         // @param layout The pipeline layout that will be used to bind the descriptor set
@@ -528,9 +586,8 @@ namespace vr {
             std::vector<vk::DeviceSize> offset, // offset in the descriptor buffer, that is bound at bufferIndex, to the descriptor set
             vk::CommandBuffer command_buffer, vk::PipelineBindPoint bindPoint = vk::PipelineBindPoint::eRayTracingKHR);
 
-        // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-        // @@@@@@@@@@@@@@@@@@ shader Binding Table Functions @@@@@@@@@@@@@@@@@@@@@@@@@@
-        // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        // shader Binding Table Functions =========================================================
+
 
         // @brief Gets the opaque handles for the shader records in the SBT buffer
         // @param pipeline The pipeline that will be used to get the handles
@@ -539,6 +596,7 @@ namespace vr {
         // @return The opaque handles for the shader records in the SBT buffer
         // @note For vk_ray's internal use, but can be used by the user doing custom SBT
         [[nodiscard]] std::vector<uint8_t> get_handles_for_sbtbuffer(vk::Pipeline pipeline, uint32_t firstGroup, uint32_t groupCount);
+
 
         // @brief Gets the opaque handles for the shader records in the SBT buffer
         // @param pipeline The pipeline that will be used to get the handles
@@ -550,6 +608,7 @@ namespace vr {
         // @note For vk_ray's internal use, but can be used by the user doing custom SBT
         void get_handles_for_sbtbuffer(vk::Pipeline pipeline, uint32_t firstGroup, uint32_t groupCount, void* data);
 
+
         // @brief Writes data to a shader record in the SBT buffer
         // @param sbtBuf The SBT buffer that will be written to
         // @param group The shader group that will be written to
@@ -559,7 +618,9 @@ namespace vr {
         // @param mappedData The pointer to the mapped data of the SBT buffer, if it is null, the buffer will be mapped
         // and unmapped, default is nullptr
         // @warning Segfault if any of the pointers are not valid or the data size if out of bounds
-        void write_to_sbt(sbt_buffer sbtBuf, shader_group group, uint32_t groupIndex, void* data, uint32_t dataSize, void* mappedData = nullptr);
+        void write_to_sbt(sbt_buffer sbtBuf, shader_group group, uint32_t groupIndex, void* data, uint32_t dataSize, 
+            void* mappedData = nullptr);
+
 
         // @brief Creates a buffer for each shader type in the shader binding table
         // @param pipeline The pipeline that will be used to create the SBT buffer
@@ -568,6 +629,7 @@ namespace vr {
         // @return The SBT buffer object, which has buffers and vk::StridedDeviceAddressRegionKHR for each shader type
         // in the shader binding table ready to be used in dispatching rays.
         [[nodiscard]] sbt_buffer create_sbt(vk::Pipeline pipeline, const sbt_info& sbt);
+
 
         // @brief Rebuilds the SBT buffer with the new shader binding table info
         // @param pipeline The pipeline that will be used to rebuild the SBT buffer
@@ -581,6 +643,7 @@ namespace vr {
         // buffer. So you don't have to WriteToSBT(...) again after rebuilding the SBT buffer.
         bool rebuild_sbt(vk::Pipeline pipeline, sbt_buffer& buffer, const sbt_info& sbt);
 
+
         // @brief Copies the whole SBT from a buffer to another, including the opaque handles.
         // @param dst The SBT buffer that will be copied to
         // @param src The SBT buffer that will be copied from
@@ -591,6 +654,7 @@ namespace vr {
         // have to call WriteToSBT(...) again for even the old shader records.
         void copy_sbt(sbt_buffer& src, sbt_buffer& dst);
 
+
         // @brief Checks if the shaders can fit in the SBT buffer
         // @param buffer The SBT buffer that will be checked
         // @param sbtInfo The shader binding table info with the shader info that will be checked
@@ -598,9 +662,11 @@ namespace vr {
         // false otherwise
         bool can_sbt_fit_shaders(sbt_buffer& buffer, const sbt_info& sbtInfo);
 
+
         // @brief Destroys the SBT buffer
         // @param buffer The SBT buffer that will be destroyed
         void destroy_sbt_buffer(sbt_buffer& buffer);
+
 
         // @brief Dispatches the rays
         // @param rtPipeline The ray tracing pipeline that will be used to dispatch the rays
@@ -609,11 +675,10 @@ namespace vr {
         // @param height The height of the image that will be used to dispatch the rays
         // @param depth The depth of the image that will be used to dispatch the rays, default is 1
         // @param command_buffer The command buffer that will be used to record the dispatch
-        void dispatch_rays(const vk::Pipeline rtPipeline, const sbt_buffer& buffer, uint32_t width, uint32_t height, uint32_t depth, vk::CommandBuffer command_buffer);
+        void dispatch_rays(const vk::Pipeline rtPipeline, const sbt_buffer& buffer, uint32_t width, uint32_t height, uint32_t depth, 
+            vk::CommandBuffer command_buffer);
 
-        // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-        // @@@@@@@@@@@@@@@@@@@@@@@@@@@ Denoiser Functions @@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-        // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        // Denoiser Functions =====================================================================
 
 #ifdef VULRAY_BUILD_DENOISERS
 

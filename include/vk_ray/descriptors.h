@@ -19,28 +19,27 @@ namespace vr {
     // note These enums map straight to the Vulkan BufferUsageFlagBits
     enum class descriptor_buffer_type : uint32_t {
 
-        resource = (uint32_t)vk::BufferUsageFlagBits::eResourceDescriptorBufferEXT,     // The buffer will store resource descriptors, eg uniform buffers, storage buffers
-        sampler = (uint32_t)vk::BufferUsageFlagBits::eSamplerDescriptorBufferEXT,       // The buffer will store image descriptors so sampled images
-        // The buffer will store combined image samplers
-        combined = (uint32_t)(vk::BufferUsageFlagBits::eSamplerDescriptorBufferEXT | vk::BufferUsageFlagBits::eResourceDescriptorBufferEXT)
+        resource = (uint32_t)vk::BufferUsageFlagBits::eResourceDescriptorBufferEXT,     // store resource descriptors, eg uniform buffers, storage buffers
+        sampler = (uint32_t)vk::BufferUsageFlagBits::eSamplerDescriptorBufferEXT,       // store image descriptors so sampled images
+        combined = (uint32_t)(vk::BufferUsageFlagBits::eSamplerDescriptorBufferEXT | vk::BufferUsageFlagBits::eResourceDescriptorBufferEXT) // store combined image samplers
     };
 
 
     struct descriptor_buffer {
 
         // The buffer that will store the descriptors
-        allocated_buffer                buffer;
+        allocated_buffer                                buffer;
 
         // Number of IDENTICAL descriptor sets in the buffer
         // note This is useful for offsetting into the buffer that has multiple IDENTICAL descriptor sets and binding
         /// one of them
-        uint32_t                        set_count = 0;
+        uint32_t                                        set_count = 0;
 
         // Size of a single descriptor in the buffer
-        uint32_t                        single_descriptor_size = 0;
+        uint32_t                                        single_descriptor_size = 0;
 
         // Type of descriptors that will be stored in the buffer, Default is Resource
-        descriptor_buffer_type          type = descriptor_buffer_type::resource;
+        descriptor_buffer_type                          type = descriptor_buffer_type::resource;
 
         // If there are multiple descriptor sets in the buffer, this is the offset to the start of the set
         // param set_index The index of the set to get the offset to
@@ -69,11 +68,11 @@ namespace vr {
               p_resources(reinterpret_cast<allocated_buffer*>(p_items)) // even if the item isn't a buffer, we can use this field, since its a union and a 64-bit address
         { }
 
-        vk::DescriptorType type;                                            // Type of resource, eg uniform buffer, storage buffer, image sampler, etc
-        uint32_t binding = 0;                                               // Binding of the descriptor in the shader
-        uint32_t binding_offset = 0;                                        // Offset of the binding in the descriptor set (filled in when creating the descriptor set)
-        uint32_t array_size = 0;                                            // Size of the binding array, if it is dynamic, this is the max size
-        vk::ShaderStageFlags stage_flags = vk::ShaderStageFlagBits::eAll;   // shader stages that the descriptor will be used in
+        vk::DescriptorType                              type;               // Type of resource, eg uniform buffer, storage buffer, image sampler, etc
+        uint32_t                                        binding = 0;        // Binding of the descriptor in the shader
+        uint32_t                                        binding_offset = 0; // Offset of the binding in the descriptor set (filled in when creating the descriptor set)
+        uint32_t                                        array_size = 0;     // Size of the binding array, if it is dynamic, this is the max size
+        vk::ShaderStageFlags                            stage_flags = vk::ShaderStageFlagBits::eAll;   // shader stages that the descriptor will be used in
 
         // If this is non-zero, the descriptor is dynamic and specifies of how many items you want to update
         /// when calling UpdateDescriptorSet(...)
@@ -82,19 +81,19 @@ namespace vr {
         uint32_t dynamic_array_size = 0;
 
         // all of these are 64 bit pointers, so we can use a union
-        union
-        {
-            allocated_buffer*           p_resources = nullptr;              // Pointer to the resources that will be stored in the descriptor
-            accessible_image*           p_images;                           // Pointer to the images that will be stored in the descriptor
-            vk::DeviceAddress*          p_acceleration_structures;          // Pointer to the acceleration structures that will be stored in the descriptor
-            allocated_texel_buffer*     p_texel_buffers;                    // Pointer to the texel buffers that will be stored in the descriptor
+        union {
+
+            allocated_buffer*                           p_resources = nullptr;              // Pointer to the resources that will be stored in the descriptor
+            accessible_image*                           p_images;                           // Pointer to the images that will be stored in the descriptor
+            vk::DeviceAddress*                          p_acceleration_structures;          // Pointer to the acceleration structures that will be stored in the descriptor
+            allocated_texel_buffer*                     p_texel_buffers;                    // Pointer to the texel buffers that will be stored in the descriptor
         };
 
 
         // Gets the layout binding for the descriptor
         // return The layout binding for the descriptor
-        vk::DescriptorSetLayoutBinding get_layout_binding() const
-        {
+        vk::DescriptorSetLayoutBinding get_layout_binding() const {
+
             return vk::DescriptorSetLayoutBinding()
                 .setBinding(binding)
                 .setDescriptorType(type)
@@ -129,9 +128,9 @@ namespace vr {
         vk::DescriptorAddressInfoEXT get_address_info(uint32_t resource_index = 0) const {
 
             auto address_info = vk::DescriptorAddressInfoEXT()
-                                   .setRange(p_resources[resource_index].size)
-                                   .setFormat(vk::Format::eUndefined)
-                                   .setAddress(p_resources[resource_index].dev_address);
+                .setRange(p_resources[resource_index].size)
+                .setFormat(vk::Format::eUndefined)
+                .setAddress(p_resources[resource_index].dev_address);
 
             return address_info;
         }
@@ -177,4 +176,3 @@ namespace vr {
     // CLASS DECLARATION ===============================================================================================
 
 }
-

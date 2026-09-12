@@ -2,6 +2,8 @@
 
 #include "../../src/pch.h"
 
+
+
 // FORWARD DECLARATIONS ================================================================================================
 
 namespace vr {
@@ -13,8 +15,8 @@ namespace vr {
     // TYPES ===========================================================================================================
 
     // @brief Structure of a Buffer used for calls with vk_ray
-    struct allocated_buffer
-    {
+    struct allocated_buffer {
+
         // @brief The allocation for the buffer, if this is null, the buffer is not allocated by vk_ray
         // @note If this is not null, the buffer is allocated by vk_ray and should be freed by calling
         // DestroyBuffer(...) If the buffer is allocated by the user, they do not need to set this field.
@@ -53,6 +55,7 @@ namespace vr {
         vk::ImageView           view = nullptr;                         // @brief The image view of the image
         vk::Sampler             sampler = nullptr;                      // @brief Optional sampler for the image
         vk::ImageLayout         layout = vk::ImageLayout::eUndefined;   // @brief The image layout of the image
+        vk::DescriptorSet       descriptor_set = nullptr;                   // @brief Descriptor set to display the image with ImGui
     };
 
     // STATIC VARIABLES ================================================================================================

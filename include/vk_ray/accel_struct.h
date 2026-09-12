@@ -15,8 +15,8 @@ namespace vr {
     // TYPES ===========================================================================================================
 
     // Contains the device address of the geometry data
-    struct geometry_device_address
-    {
+    struct geometry_device_address {
+
         geometry_device_address() = default;
         geometry_device_address(vk::DeviceAddress vertex_or_aabb_dev_address, vk::DeviceAddress index_dev_address)
             : vertex_dev_address(vertex_or_aabb_dev_address), index_dev_address(index_dev_address) { }
@@ -31,8 +31,8 @@ namespace vr {
         vk::DeviceAddress               transform_dev_address = {};   // Buffer containing the transform for the geometry, if this is null, the geometry will use the identity matrix
     };
 
-    struct geometry_data
-    {
+    struct geometry_data {
+
         vk::GeometryTypeKHR             type = vk::GeometryTypeKHR::eTriangles;         // Type of geometry, either triangles or AABBs
         geometry_device_address         data_addresses = {};                            // Buffer containing the vertices, only used for triangles
         vk::IndexType                   index_format = vk::IndexType::eUint32;          // Format of the index buffer, only used for triangles
@@ -46,18 +46,18 @@ namespace vr {
     // BLAS STRUCTURES
     //--------------------------------------------------------------------------------------
 
-    struct blas_create_info
-    {
-        std::vector<geometry_data>                   geometries;     // Geometries to be added to the BLAS (All the geometries must be of the same type, either triangles or AABBs)
+    struct blas_create_info {
+
+        std::vector<geometry_data>                                      geometries;     // Geometries to be added to the BLAS (All the geometries must be of the same type, either triangles or AABBs)
 
         // Flags for the acceleration structure, Default is ePreferFastTrace
         /// @note The flags must be appropriately set for future use, e.g., compaction, update, etc.
-        vk::BuildAccelerationStructureFlagsKHR      flags = vk::BuildAccelerationStructureFlagBitsKHR::ePreferFastTrace;
+        vk::BuildAccelerationStructureFlagsKHR                          flags = vk::BuildAccelerationStructureFlagBitsKHR::ePreferFastTrace;
     };
 
 
-    struct blas_build_info
-    {
+    struct blas_build_info {
+
         vk::AccelerationStructureBuildSizesInfoKHR                      build_sizes = {};           // Contains the build sizes for the acceleration structure
         vk::AccelerationStructureBuildGeometryInfoKHR                   build_geometry_info = {};   // Contains the build info for the acceleration structure
 
@@ -72,15 +72,15 @@ namespace vr {
     };
 
 
-    struct blas_handle
-    {
+    struct blas_handle {
+
         vk::AccelerationStructureKHR                            acceleration_structure = nullptr;       // Raw handle of the acceleration structure
         allocated_buffer                                        buffer = {};                // Buffer containing the acceleration structure
     };
 
 
-    struct blas_update_info
-    {
+    struct blas_update_info {
+
         blas_handle*                                            source_blas = {};           // Indicates the destination BLAS which is getting updated
         blas_build_info                                         source_build_info = {};     // This is the build info that was given when creating the destination BLAS, which will be reused
 
@@ -93,8 +93,8 @@ namespace vr {
     };
 
 
-    struct compaction_request
-    {
+    struct compaction_request {
+
         vk::QueryPool                                           compaction_query_pool = nullptr; // Query pool that will be used to get the compacted size
         std::vector<vk::AccelerationStructureKHR>               source_blas = {};           // All the BLASes that will be compacted
     };
@@ -103,16 +103,16 @@ namespace vr {
     // TLAS STRUCTUES
     //--------------------------------------------------------------------------------------
 
-    struct tlas_create_info
-    {
+    struct tlas_create_info {
+
         uint32_t                                                max_instance_count = 0;     // Contains the geometries that will be added to the TLAS
         vk::DeviceAddress                                       instance_dev_address = {};  // Device address of the instance buffer
         vk::BuildAccelerationStructureFlagsKHR                  flags = vk::BuildAccelerationStructureFlagBitsKHR::ePreferFastTrace;        // Flags for the acceleration structure, Default is ePreferFastTrace
     };
 
 
-    struct tlas_build_info
-    {
+    struct tlas_build_info {
+
         vk::AccelerationStructureBuildSizesInfoKHR              build_sizes = {};           // Contains the build sizes for the acceleration structure
         vk::AccelerationStructureBuildGeometryInfoKHR           build_geometry_info = {};   // Contains the build info for the acceleration structure
         std::shared_ptr<vk::AccelerationStructureGeometryKHR>   geometry = {};              // Geometries that are included in the acceleration structure
@@ -121,8 +121,8 @@ namespace vr {
     };
 
 
-    struct tlas_handle
-    {
+    struct tlas_handle {
+
         vk::AccelerationStructureKHR                            acceleration_structure = nullptr;   // Raw handle of the acceleration structure
         allocated_buffer                                        buffer = {};                // Buffer containing the acceleration structure
     };

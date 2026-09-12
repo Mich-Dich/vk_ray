@@ -16,8 +16,8 @@ namespace vr {
     // TYPES ===========================================================================================================
 
     // brief Enum that defines the type of shader in the shader binding table
-    enum class shader_group : uint8_t
-    {
+    enum class shader_group : uint8_t {
+
         ray_gen = 0,
         miss,
         hit_group,
@@ -26,8 +26,8 @@ namespace vr {
 
 
     // brief Contains all shaders that will be used in a hit group of an SBT
-    struct hit_group
-    {
+    struct hit_group {
+
         shader                                  closest_hit_shader = {};
         shader                                  any_hit_shader = {};
         shader                                  intersection_shader = {};
@@ -35,8 +35,8 @@ namespace vr {
 
 
     // brief Structure that defines a shader Binding Table that can be used to trace rays
-    struct sbt_buffer
-    {
+    struct sbt_buffer {
+
         allocated_buffer                        ray_gen_buffer = {};
         allocated_buffer                        miss_buffer = {};
         allocated_buffer                        hit_group_buffer = {};
@@ -55,8 +55,8 @@ namespace vr {
 
 
     // brief Pipeline library input structure
-    struct ray_tracing_shader_collection
-    {
+    struct ray_tracing_shader_collection {
+
         std::vector<shader>                     ray_gen_shaders = {};
         std::vector<shader>                     miss_shaders = {};
         std::vector<hit_group>                  hit_groups = {};
@@ -81,8 +81,8 @@ namespace vr {
 
     // brief Structure that defines the settings for a ray tracing pipeline. When creating pipeline libraries that
     //  link to a single pipeline, the settigns should be the same for all pipelines
-    struct pipeline_settings
-    {
+    struct pipeline_settings {
+
         vk::PipelineLayout                      pipeline_layout = nullptr;
 
         uint32_t                                max_recursion_depth = 1;            // brief The maximum number of levels of recursion allowed in the pipeline
@@ -92,8 +92,8 @@ namespace vr {
 
 
     // brief Structure that defines the information needed to create a shader binding table
-    struct sbt_info
-    {
+    struct sbt_info {
+
         uint32_t                                ray_gen_shader_record_size = 0;     // brief The size of each ray gen shader record in bytes
         uint32_t                                miss_shader_record_size = 0;        // brief The size of each miss shader record in bytes
         uint32_t                                hit_group_record_size = 0;          // brief The size of each hit group shader record in bytes
